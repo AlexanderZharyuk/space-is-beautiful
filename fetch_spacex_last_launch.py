@@ -2,7 +2,7 @@ import argparse
 
 import requests
 
-from main import download_image
+from main_functions import download_image
 
 
 def fetch_spacex_last_launch(launch_id='latest') -> None:
