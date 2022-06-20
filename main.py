@@ -2,6 +2,8 @@ import logging
 import os
 import pprint
 
+from urllib.parse import urlparse
+
 import telegram
 import requests
 
@@ -33,6 +35,30 @@ def fetch_spacex_last_launch() -> None:
         download_image(photo_url, image_name=image_name)
 
 
+def get_file_extension(image_url):
+    parsed_image_url = urlparse(image_url)
+    return os.path.splitext(parsed_image_url.path)[-1]
+
+
+def download_apod():
+    """Get Astronomy Picture Of Day"""
+    url = 'https://api.nasa.gov/planetary/apod'
+    params = {
+        'api_key': os.environ['NASA_API_KEY'],
+        'count': 30
+    }
+
+    response = requests.get(url, params=params).json()
+
+    for image_number, image_url in enumerate(response):
+        if image_url.get('hdurl'):
+            image_url_from_api = image_url['hdurl']
+            image_extension = get_file_extension(image_url_from_api)
+            image_name = f'nasa_apod_{image_number}{image_extension}'
+            download_image(image_url_from_api, image_name=image_name)
+
+
 if __name__ == '__main__':
     load_dotenv()
-    fetch_spacex_last_launch()
+    download_apod()
+
