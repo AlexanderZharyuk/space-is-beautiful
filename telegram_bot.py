@@ -18,7 +18,7 @@ if __name__ == '__main__':
         posting_delay = 14400
 
     bot = telegram.Bot(telegram_token)
-    images = os.walk('images').__next__()[2]
+    images = list(os.walk(os.environ['DOWNLOAD_DIR']))[0][2]
     logging.basicConfig(format='[%(levelname)s]: %(message)s', datefmt='%m.%d.%Y %H:%M:%S', level=logging.INFO)
 
     while True:
