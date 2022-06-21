@@ -1,4 +1,5 @@
 import argparse
+import logging
 
 import requests
 
@@ -20,7 +21,13 @@ if __name__ == '__main__':
     parser.add_argument('launch_id', help='Launch id which you want download photos.', const='latest',
                         nargs='?', default='latest')
     args = parser.parse_args()
+    logging.basicConfig(format='[%(levelname)s]: %(message)s', datefmt='%m.%d.%Y %H:%M:%S', level=logging.INFO)
+
     try:
         fetch_spacex_last_launch(args.launch_id)
     except requests.exceptions.JSONDecodeError:
-        print('Не найдены данные о последнем вылете, укажите айди')
+        logging.info("Can't find latest launch id. Try run script with number of launch id.")
+    except ConnectionError:
+        logging.error('ConnectionError, try again.')
+    except requests.HTTPError:
+        logging.warning('Get HTTPError, some troubles with host?')
