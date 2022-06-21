@@ -1,6 +1,8 @@
 import argparse
-from datetime import datetime
 import os
+import logging
+
+from datetime import datetime
 
 import requests
 
@@ -14,9 +16,10 @@ def download_epic():
     params = {
         'api_key': os.environ['NASA_API_KEY'],
     }
-    response = requests.get(all_images_url, params=params).json()
+    response = requests.get(all_images_url, params=params)
+    response.raise_for_status()
 
-    for image_number, image in enumerate(response):
+    for image_number, image in enumerate(response.json()):
         date = image['date']
         image_name = image['image']
         photo_datetime = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
@@ -24,6 +27,7 @@ def download_epic():
         url = f'https://api.nasa.gov/EPIC/archive/natural/{photo_datetime.year}/' \
               f'{photo_datetime.month:02}/{photo_datetime.day}/png/{image_name}.png'
         response = requests.get(url, params=params)
+        response.raise_for_status()
 
         image_extension = get_file_extension(response.url)
         saved_image_name = f'EPIC_{image_number}{image_extension}'
@@ -34,4 +38,11 @@ if __name__ == '__main__':
     load_dotenv()
     parser = argparse.ArgumentParser(description='Script for download EPIC photos.')
     parser.parse_args()
-    download_epic()
+    logging.basicConfig(format='[%(levelname)s]: %(message)s', datefmt='%m.%d.%Y %H:%M:%S', level=logging.INFO)
+
+    try:
+        download_epic()
+    except ConnectionError:
+        logging.error('ConnectionError. Try again.')
+    except requests.HTTPError:
+        logging.warning('Get HTTPError, some troubles with host?')
