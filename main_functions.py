@@ -7,6 +7,7 @@ import requests
 
 def download_image(image_url: str, image_name: str, image_folder: str = 'images/') -> None:
     response = requests.get(image_url)
+    response.raise_for_status()
 
     os.makedirs(image_folder, exist_ok=True)
     image_path = os.path.join(image_folder, image_name)
@@ -15,6 +16,6 @@ def download_image(image_url: str, image_name: str, image_folder: str = 'images/
         new_image.write(response.content)
 
 
-def get_file_extension(image_url):
+def get_file_extension(image_url: str) -> str:
     parsed_image_url = urlparse(image_url)
     return os.path.splitext(parsed_image_url.path)[-1]

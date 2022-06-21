@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from main_functions import get_file_extension, download_image
 
 
-def download_epic():
+def download_epic() -> None:
     all_images_url = 'https://api.nasa.gov/EPIC/api/natural/images'
     params = {
         'api_key': os.environ['NASA_API_KEY'],

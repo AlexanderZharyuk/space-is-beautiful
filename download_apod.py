@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from main_functions import get_file_extension, download_image
 
 
-def download_apod():
+def download_apod() -> None:
     """Get Astronomy Picture Of Day"""
     url = 'https://api.nasa.gov/planetary/apod'
     params = {
