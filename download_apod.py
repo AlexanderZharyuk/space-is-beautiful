@@ -25,7 +25,10 @@ def download_apod() -> None:
             image_url_from_api = image_url['hdurl'].replace('%20', '')
             image_extension = get_file_extension(image_url_from_api)
             image_name = f'nasa_apod_{image_number}{image_extension}'
-            download_image(image_url_from_api, image_name=image_name)
+            try:
+                download_image(image_url_from_api, image_name=image_name)
+            except requests.HTTPError:
+                continue
 
 
 if __name__ == '__main__':
@@ -38,5 +41,3 @@ if __name__ == '__main__':
         download_apod()
     except ConnectionError:
         logging.error('ConnectionError. Try again.')
-    except requests.HTTPError:
-        logging.warning('Get HTTPError, some troubles with host?')
