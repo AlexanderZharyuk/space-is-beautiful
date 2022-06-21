@@ -4,8 +4,13 @@ from urllib.parse import urlparse
 
 import requests
 
+from dotenv import load_dotenv
 
-def download_image(image_url: str, image_name: str, image_folder: str = 'images/') -> None:
+
+load_dotenv()
+
+
+def download_image(image_url: str, image_name: str, image_folder: str = os.environ['DOWNLOAD_DIR']) -> None:
     response = requests.get(image_url)
     response.raise_for_status()
 
