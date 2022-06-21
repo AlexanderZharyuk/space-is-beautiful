@@ -12,11 +12,16 @@ if __name__ == '__main__':
     load_dotenv()
     telegram_token = os.environ['TELEGRAM_BOT_TOKEN']
     telegram_group_id = os.environ['TELEGRAM_GROUP_ID']
-    posting_delay = float(os.environ['POST_DELAY'])
+    if os.environ.get('POST_DELAY'):
+        posting_delay = float(os.environ['POST_DELAY'])
+    else:
+        posting_delay = 14400
 
     bot = telegram.Bot(telegram_token)
     images = os.walk('images').__next__()[2]
     max_file_size = 20000000
+
+    logging.basicConfig(format='[%(levelname)s]: %(message)s', datefmt='%m.%d.%Y %H:%M:%S', level=logging.INFO)
 
     while True:
         try:
