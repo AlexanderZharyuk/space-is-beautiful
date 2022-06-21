@@ -10,4 +10,4 @@ if __name__ == '__main__':
     telegram_token = os.environ['TELEGRAM_BOT_TOKEN']
     telegram_group_id = os.environ['TELEGRAM_GROUP_ID']
     bot = telegram.Bot(telegram_token)
-    bot.send_message(chat_id='-1001776477471', text='Hello Space!')
+    bot.send_photo(chat_id=telegram_group_id, photo=open('images/nasa_apod_4.jpg', 'rb'))
