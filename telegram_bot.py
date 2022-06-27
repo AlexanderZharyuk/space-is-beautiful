@@ -12,13 +12,11 @@ if __name__ == '__main__':
     load_dotenv()
     telegram_token = os.environ['TELEGRAM_BOT_TOKEN']
     telegram_group_id = os.environ['TELEGRAM_GROUP_ID']
-    if os.environ.get('POST_DELAY'):
-        posting_delay = float(os.environ['POST_DELAY'])
-    else:
-        posting_delay = 14400
+    dir_with_images = os.environ['DOWNLOAD_DIR']
+    posting_delay = int(os.getenv('POST_DELAY', 14400))
 
     bot = telegram.Bot(telegram_token)
-    images = list(os.walk(os.environ['DOWNLOAD_DIR']))[0][2]
+    images = os.listdir(dir_with_images)
     logging.basicConfig(format='[%(levelname)s]: %(message)s', datefmt='%m.%d.%Y %H:%M:%S', level=logging.INFO)
 
     while True:
@@ -35,6 +33,9 @@ if __name__ == '__main__':
             continue
         except telegram.error.BadRequest:
             logging.info('Image size is big, try new one...')
+            continue
+        except telegram.error.NetworkError:
+            logging.info('Network error... Reloading')
             continue
 
         time.sleep(posting_delay)
