@@ -9,12 +9,12 @@ from dotenv import load_dotenv
 from general_functions import get_file_extension, download_image
 
 
-def download_apod(api_key: str) -> None:
+def download_apod(api_key: str, photos_count: int = 30) -> None:
     """Get Astronomy Picture Of Day"""
     url = 'https://api.nasa.gov/planetary/apod'
     params = {
         'api_key': api_key,
-        'count': 30
+        'count': photos_count
     }
 
     response = requests.get(url, params=params)
