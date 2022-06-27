@@ -20,12 +20,12 @@ def download_epic(api_key: str, dir_to_download: str) -> None:
     response.raise_for_status()
 
     for image_number, image in enumerate(response.json()):
-        date = image['date']
         image_name = image['image']
-        photo_datetime = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+        photo_created_year, photo_created_month, photo_created_day = \
+            datetime.fromisoformat(image['date']).strftime("%Y/%m/%d").split('/')
+        url = f'https://api.nasa.gov/EPIC/archive/natural/{photo_created_year}/' \
+              f'{photo_created_month}/{photo_created_day}/png/{image_name}.png'
 
-        url = f'https://api.nasa.gov/EPIC/archive/natural/{photo_datetime.year}/' \
-              f'{photo_datetime.month:02}/{photo_datetime.day}/png/{image_name}.png'
         response = requests.get(url, params=params)
         response.raise_for_status()
 
