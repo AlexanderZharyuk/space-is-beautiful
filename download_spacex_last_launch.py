@@ -11,8 +11,10 @@ from general_functions import download_image
 
 def fetch_spacex_last_launch(dir_to_download: str, launch_id='latest') -> None:
     url = f"https://api.spacexdata.com/v3/launches/{launch_id}"
-    response = requests.get(url).json()
-    launch_photos = response['links']['flickr_images']
+    response = requests.get(url)
+    response.raise_for_status()
+
+    launch_photos = response.json()['links']['flickr_images']
 
     for photo_number, photo_url in enumerate(launch_photos):
         image_name = f'spacex_{photo_number}.jpg'
