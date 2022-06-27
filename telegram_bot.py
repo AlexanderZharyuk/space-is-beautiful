@@ -26,7 +26,9 @@ if __name__ == '__main__':
             random_image = random.choice(images)
             image_path = os.path.join(os.environ['DOWNLOAD_DIR'], random_image)
 
-            bot.send_photo(chat_id=telegram_group_id, photo=open(image_path, 'rb'))
+            with open(image_path, 'rb') as image:
+                bot.send_photo(chat_id=telegram_group_id, photo=image)
+
         except ConnectionError:
             logging.error('ConnectionError. Going to sleep 1 min.')
             time.sleep(60)
