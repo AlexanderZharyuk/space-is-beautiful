@@ -3,7 +3,7 @@ import logging
 
 import requests
 
-from main_functions import download_image
+from general_functions import download_image
 
 
 def fetch_spacex_last_launch(launch_id='latest') -> None:

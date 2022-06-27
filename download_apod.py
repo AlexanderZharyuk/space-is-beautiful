@@ -6,7 +6,7 @@ import requests
 
 from dotenv import load_dotenv
 
-from main_functions import get_file_extension, download_image
+from general_functions import get_file_extension, download_image
 
 
 def download_apod() -> None:
