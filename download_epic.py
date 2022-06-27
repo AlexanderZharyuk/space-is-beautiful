@@ -1,6 +1,7 @@
 import argparse
 import os
 import logging
+from urllib.parse import urlparse, parse_qsl, urlencode, urlunparse
 
 from datetime import datetime
 
@@ -26,13 +27,18 @@ def download_epic(api_key: str, dir_to_download: str) -> None:
         url = f'https://api.nasa.gov/EPIC/archive/natural/{photo_created_year}/' \
               f'{photo_created_month}/{photo_created_day}/png/{image_name}.png'
 
-        response = requests.get(url, params=params)
-        response.raise_for_status()
+        url_parse = urlparse(url)
+        query = url_parse.query
+        url_dict = dict(parse_qsl(query))
+        url_dict.update(params)
+        url_new_query = urlencode(url_dict)
+        url_parse = url_parse._replace(query=url_new_query)
+        full_url = urlunparse(url_parse)
 
-        image_extension = get_file_extension(response.url)
+        image_extension = get_file_extension(url)
         saved_image_name = f'EPIC_{image_number}{image_extension}'
         image_path = os.path.join(dir_to_download, saved_image_name)
-        download_image(response.url, image_path)
+        download_image(full_url, image_path)
 
 
 if __name__ == '__main__':
