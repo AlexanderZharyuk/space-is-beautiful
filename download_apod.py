@@ -1,6 +1,7 @@
 import argparse
 import os
 import logging
+import urllib.parse
 
 import requests
 
@@ -22,7 +23,7 @@ def download_apod(api_key: str, photos_count: int = 30) -> None:
 
     for image_number, image_url in enumerate(response.json()):
         if image_url.get('hdurl'):
-            image_url_from_api = image_url['hdurl'].replace('%20', '')
+            image_url_from_api = urllib.parse.unquote(image_url['hdurl'], encoding='utf-8')
             image_extension = get_file_extension(image_url_from_api)
             image_name = f'nasa_apod_{image_number}{image_extension}'
             try:
@@ -36,10 +37,12 @@ if __name__ == '__main__':
     nasa_api_key = os.environ['NASA_API_KEY']
 
     parser = argparse.ArgumentParser(description='Script for download APOD photos.')
-    parser.parse_args()
+    parser.add_argument('count', help='Count photos for download', const=30,
+                        nargs='?', default=30)
+    args = parser.parse_args()
 
     logging.basicConfig(format='[%(levelname)s]: %(message)s', datefmt='%m.%d.%Y %H:%M:%S', level=logging.INFO)
     try:
-        download_apod(nasa_api_key)
+        download_apod(nasa_api_key, args.count)
     except ConnectionError:
         logging.error('ConnectionError. Try again.')
