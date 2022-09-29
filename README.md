@@ -49,4 +49,4 @@ All pictures after the scripts work are placed in the folder that you specified 
 
 ## The author
 
-* [Alexander Zharyuk] (https://gist.github.com/AlexanderZharyuk)
+* [Alexander Zharyuk](https://gist.github.com/AlexanderZharyuk)
